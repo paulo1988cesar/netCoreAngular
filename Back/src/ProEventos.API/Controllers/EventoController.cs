@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProEventos.API.Data;
 using ProEventos.API.Models;
 
 namespace ProEventos.API.Controllers
@@ -12,59 +13,40 @@ namespace ProEventos.API.Controllers
     [Route("api/[controller]")]
     public class EventoController : ControllerBase
     {
-
-        [HttpGet]
-        public Evento Get()
+        private readonly DataContext _context;
+        public EventoController(DataContext context)
         {
-            return new Evento
-            {
-                EventoId = 1,
-                Tema = "Curso Angular .NET 5",
-                DataEvento = DateTime.UtcNow.AddDays(60),
-                Local = "Belo Horizonte",
-                Lote = "1º Lote",
-                QtdPessoas = 250
-            };
+            _context = context;
         }
 
         [HttpGet("GetAll")]
         public IEnumerable<Evento> GetAll()
         {
-            List<Evento> eventos = new List<Evento>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                eventos.Add(new Evento
-                {
-                    EventoId = i += 1,
-                    Tema = "Curso Angular .NET 5",
-                    DataEvento = DateTime.UtcNow.AddDays(60 + i),
-                    Local = "Belo Horizonte",
-                    Lote = "1º Lote",
-                    QtdPessoas = 250
-                });
-            }
-            return eventos.AsEnumerable();
+            return _context.Eventos.AsEnumerable();
         }
 
         [HttpGet("{id}")]
         public Evento Get(int id)
         {
-            List<Evento> eventos = new List<Evento>();
+            return _context.Eventos.Where(c => c.EventoId.Equals(id)).FirstOrDefault();
+        }
 
-            for (int i = 0; i < 10; i++)
-            {
-                eventos.Add(new Evento
-                {
-                    EventoId = i += 1,
-                    Tema = "Curso Angular .NET 5",
-                    DataEvento = DateTime.UtcNow.AddDays(60 + i),
-                    Local = "Belo Horizonte",
-                    Lote = "1º Lote",
-                    QtdPessoas = 250
-                });
-            }
-            return eventos.Where(c => c.EventoId == id).FirstOrDefault();
+        [HttpPost]
+        public void Post(Evento evento)
+        {
+
+        }
+
+        [HttpPut]
+        public void Put(Evento evento)
+        {
+
+        }
+
+        [HttpDelete]
+        public void Delete(int id)
+        {
+
         }
     }
 }
