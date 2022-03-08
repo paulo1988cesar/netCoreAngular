@@ -12,7 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ProEventos.API.Data;
+using ProEventos.Application.Interfaces;
+using ProEventos.Application.Services;
+using ProEventos.Persistencia;
+using ProEventos.Persistencia.Contexto;
+using ProEventos.Persistencia.Interfaces;
 
 namespace ProEventos.API
 {
@@ -28,12 +32,21 @@ namespace ProEventos.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt =>
+            services.AddDbContext<ProEventoContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling 
+                                                          = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<IEventosPersistencia, EventosPersistencia>();
+            services.AddScoped<IPalestrantePersistencia, PalestrantePersistencia>();
+            services.AddScoped<IPersistencia, BasePersistencia>();
+            services.AddScoped<IPalestranteService, PalestranteService>(); 
+            
+
             services.AddCors();
             services.AddSwaggerGen(c =>
             {
@@ -56,7 +69,8 @@ namespace ProEventos.API
             app.UseRouting();
 
             app.UseAuthorization();
-            app.UseCors(options => {
+            app.UseCors(options =>
+            {
                 options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
             });
             app.UseEndpoints(endpoints =>
