@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ProEventos.Persistencia;
-using ProEventos.Domain;
 using ProEventos.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
+using ProEventos.Application.Dtos;
 
 namespace ProEventos.API.Controllers
 {
@@ -28,7 +25,9 @@ namespace ProEventos.API.Controllers
             {
                 var eventos = await _eventoService.GetAllEventosByAsync(true);
 
-                if(eventos == null) return NotFound("Nenhum evento encontrado");
+                if(eventos == null) return NoContent();
+
+                var eventosDto = new List<EventoDto>();
 
                 return Ok(eventos);
             }
@@ -45,7 +44,7 @@ namespace ProEventos.API.Controllers
             {
                  var eventos = await _eventoService.GetAllEventosByIdAsync(id, true);
 
-                if(eventos == null) return NotFound("Nenhum evento encontrado");
+                if(eventos == null) return NoContent();
 
                 return Ok(eventos);
             }
@@ -62,7 +61,7 @@ namespace ProEventos.API.Controllers
             {
                  var eventos = await _eventoService.GetAllEventosByTemaAsync(tema, true);
 
-                if(eventos == null) return NotFound("Nenhum evento por tema não encontrados");
+                if(eventos == null) return NoContent();
 
                 return Ok(eventos);
             }
@@ -73,7 +72,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Evento evento)
+        public async Task<IActionResult> Post(EventoDto evento)
         {
             try
             {
@@ -90,13 +89,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int id, Evento evento)
+        public async Task<IActionResult> Put(int id, EventoDto evento)
         {
             try
             {
                 var eventos = await _eventoService.UpdateEvento(id, evento);
 
-                if(eventos == null) return NotFound("Erro ao atualizar o evento");
+                if(eventos == null) return BadRequest("Erro ao atualizar o evento");
 
                 return Ok(eventos);
             }

@@ -1,0 +1,85 @@
+<div class="row mt-5">
+
+	<div class="col-md-5 d-none d-md-block" style="height: 450px;">
+		<div class="text-center col-md-12 my-auto side-heder">
+			<h1>Cadastro de Usuário</h1>
+			<img src="../../../../assets/registerImage.png" class="my-4" alt="" width="400px">
+		</div>
+	</div>
+
+	<div class="col-md-7 ">
+
+		<form [formGroup]="form" class="p-1">
+      <div class="pb-2 d-block d-md-none">
+        <h3 class="border-bottom">Cadastro de Usuário</h3>
+      </div>
+      <div class="row mb-3">
+        <div class="input-group">
+          <span class="input-group-text">Primeiro e Segundo nome</span>
+          <input type="text" aria-label="First name" [ngClass]="{'is-invalid': f.primeironome.errors && f.primeironome.touched}" formControlName="primeironome" placeholder="Insira o Primeiro nome" class="form-control">
+          <input type="text" aria-label="Last name" [ngClass]="{'is-invalid': f.segundonome.errors && f.segundonome.touched}" formControlName="segundonome" placeholder="Insira o Último nome"  class="form-control">
+          <div *ngIf="f.primeironome.errors?.required" class="invalid-feedback">O Primeiro nome é obrigatório</div>
+          <div *ngIf="f.primeironome.errors?.minlength" class="invalid-feedback">O Primeiro nome deve ter no mínimo 4 caracteres</div>
+          <div *ngIf="f.primeironome.errors?.maxlength" class="invalid-feedback">O Primeiro nome deve ter no máximo 20 caracteres</div>
+          <div *ngIf="f.segundonome.errors?.required" class="invalid-feedback">O Segundo nome é obrigatório</div>
+          <div *ngIf="f.segundonome.errors?.minlength" class="invalid-feedback">O Segundo nome deve ter no mínimo 4 caracteres</div>
+          <div *ngIf="f.segundonome.errors?.maxlength" class="invalid-feedback">O Segundo nome deve ter no máximo 20 caracteres</div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="form-group">
+          <label for="">Email:</label>
+          <input class="form-control" type="text" [ngClass]="{'is-invalid': f.email.errors && f.email.touched}" formControlName="email" placeholder="Insira o e-mail" />
+          <div *ngIf="f.email.errors?.required && f.email.touched" class="invalid-feedback">O E-mail é obrigatório</div>
+          <div *ngIf="f.email.errors?.email && f.email.touched" class="invalid-feedback">Informe um e-mail válido</div>
+        </div>
+      </div>
+      <div class="row mb-3">
+      <div class="form-group">
+          <label for="">Usuario:</label>
+          <input class="form-control" type="text" [ngClass]="{'is-invalid': f.usuario.errors && f.usuario.touched}" formControlName="usuario" placeholder="Insira o nome de Usuário" />
+          <div *ngIf="f.usuario.errors?.required" class="invalid-feedback">O Usuário nome é obrigatório</div>
+          <div *ngIf="f.usuario.errors?.minlength" class="invalid-feedback">O  Usuário nome ter no mínimo 8 caracteres</div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="">Senha:</label>
+          <input type="password" class="form-control" [ngClass]="{'is-invalid': f.senha.errors && f.senha.touched}" formControlName="senha" placeholder="Dite uma Senha">
+          <div *ngIf="f.senha.errors?.required && f.senha.touched" class="invalid-feedback">A Senha é obrigatória</div>
+          <div *ngIf="f.senha.errors?.minlength && f.senha.touched" class="invalid-feedback">A Senha deve ter no mínimo 8 caracteres</div>
+          <div *ngIf="f.senha.errors?.maxlength && f.senha.touched" class="invalid-feedback">A Senha deve ter no máximo 10 caracteres</div>
+        </div>
+        <div class="col">
+          <label for="">Confirmar Senha:</label>
+          <input type="password" class="form-control" [ngClass]="{'is-invalid': f.confirmasenha.errors && f.confirmasenha.touched}" formControlName="confirmasenha" placeholder="Confirme a Senha">
+          <div *ngIf="f.confirmasenha.errors?.required && f.confirmasenha.touched" class="invalid-feedback">O Confirma senha é obrigatório</div>
+          <div *ngIf="f.confirmasenha.errors?.minlength && f.confirmasenha.touched" class="invalid-feedback">O Confirma senha deve ter no mínimo 8 caracteres</div>
+          <div *ngIf="f.confirmasenha.errors?.maxlength && f.confirmasenha.touched" class="invalid-feedback">O Confirma senha deve ter no máximo 10 caracteres</div>
+          <div *ngIf="f.confirmasenha.errors?.mustMatch && f.confirmasenha.touched" class="invalid-feedback">As senhas informadas não conferem</div>
+        </div>
+      </div>
+      <div class="row p-1 mb-3">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input me-2" id="customCheck1">
+          <label class="custom-control-label">Eu concordo com os <a href="#">Termos de Uso</a>.</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="d-grid gap-2">
+          <button class="btn btn-lg btn-success btn-block px-5">
+            Registar
+          </button>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="form-group col-12">
+          <a class="btn btn-link btn-block" routerLink="/user/login">
+            Já sou Cadastrado
+          </a>
+        </div>
+      </div>
+    </form>
+
+	</div>
+</div>
