@@ -25,7 +25,7 @@ namespace ProEventos.API.Controllers
             {
                 var eventos = await _eventoService.GetAllEventosByAsync(true);
 
-                if(eventos == null) return NoContent();
+                if (eventos == null) return NoContent();
 
                 var eventosDto = new List<EventoDto>();
 
@@ -42,9 +42,9 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                 var eventos = await _eventoService.GetAllEventosByIdAsync(id, true);
+                var eventos = await _eventoService.GetAllEventosByIdAsync(id, true);
 
-                if(eventos == null) return NoContent();
+                if (eventos == null) return NoContent();
 
                 return Ok(eventos);
             }
@@ -59,9 +59,9 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                 var eventos = await _eventoService.GetAllEventosByTemaAsync(tema, true);
+                var eventos = await _eventoService.GetAllEventosByTemaAsync(tema, true);
 
-                if(eventos == null) return NoContent();
+                if (eventos == null) return NoContent();
 
                 return Ok(eventos);
             }
@@ -78,7 +78,7 @@ namespace ProEventos.API.Controllers
             {
                 var eventos = await _eventoService.AddEvento(evento);
 
-                if(eventos == null) return BadRequest("Erro ao inserir o evento.");
+                if (eventos == null) return BadRequest("Erro ao inserir o evento.");
 
                 return Ok(eventos);
             }
@@ -88,14 +88,14 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, EventoDto evento)
         {
             try
             {
                 var eventos = await _eventoService.UpdateEvento(id, evento);
 
-                if(eventos == null) return BadRequest("Erro ao atualizar o evento");
+                if (eventos == null) return BadRequest("Erro ao atualizar o evento");
 
                 return Ok(eventos);
             }
@@ -105,19 +105,22 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                if( await _eventoService.DeleteEvento(id))
-                    return Ok("Evento deletado");
-                else
-                    return BadRequest("Evento não deletado");
+                var evento = await _eventoService.GetAllEventosByIdAsync(id, false);
+
+                if (evento == null) return NoContent();
+
+                if (await _eventoService.DeleteEvento(id)) 
+                    return Ok(new { message = "Deletado" });
+                    else throw new Exception("Erro ao excluir o evento");
             }
             catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao buscar o evento. Erro:{ex.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao excluir o evento. Erro:{ex.Message}");
             }
         }
     }

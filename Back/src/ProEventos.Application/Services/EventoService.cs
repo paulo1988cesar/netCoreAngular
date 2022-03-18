@@ -94,9 +94,9 @@ namespace ProEventos.Application.Services
 
                 return eventosRetornados;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

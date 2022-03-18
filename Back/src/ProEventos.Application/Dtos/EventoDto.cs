@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,7 +14,7 @@ namespace ProEventos.Application.Dtos
 
         [Display(Name = "Data evento")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public string DataEvento { get; set; }
+        public DateTime DataEvento { get; set; }
 
         [Required(ErrorMessage = "O Campo {0} é obrigatório")]
         [MinLength(3, ErrorMessage = "O campo {0} deve ter no mínimo 3 caracteres")]
