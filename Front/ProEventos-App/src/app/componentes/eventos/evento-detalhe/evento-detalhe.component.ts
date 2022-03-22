@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Lote } from './../../../models/Lote';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -24,6 +25,8 @@ export class EventoDetalheComponent implements OnInit {
   eventoId: number;
   modalRef?: BsModalRef;
   loteAtual= {id : 0, nome: '', index: 0};
+  imagemURL = 'assets/upload.png';
+  file: File;
 
   constructor(private fb: FormBuilder, private localeService: BsLocaleService, private eventoService: EventoService,
               private activatedRouter: ActivatedRoute, private spinner: NgxSpinnerService, private toasteService: ToastrService,
@@ -51,23 +54,24 @@ export class EventoDetalheComponent implements OnInit {
       this.estadoSalvar = 'put';
 
       this.eventoService
-        .getEventoById(this.eventoId)
-        .subscribe(
+        .getEventoById(this.eventoId).subscribe(
           (evento: Evento) => {
             this.evento = { ...evento };
             this.form.patchValue(this.evento);
+            if (this.evento.imageUrl !== '') {
+              this.imagemURL = environment.apiUrl + 'resources/images/' + this.evento.imageUrl;
+            }
             this.evento.lotes.forEach((lote) => {
               this.lotes.push(this.criarLote(lote));
             });
           },
           (error) => {
             this.toasteService.error(
-              'Erro ao buscar as informações de usuário',
-              'Erro!'
+              'Erro ao buscar as informações de usuário', 'Erro!'
             );
           }
         ).add(() => this.spinner.hide());
-    }
+    } else { this.estadoSalvar = 'post'; }
   }
 
   public salvarEvento(): void {
@@ -129,7 +133,7 @@ export class EventoDetalheComponent implements OnInit {
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imageUrl: ['', Validators.required],
+      imageUrl: [''],
       lotes: this.fb.array([]),
     });
   }
@@ -213,5 +217,29 @@ export class EventoDetalheComponent implements OnInit {
 
   public retornaTituloLote(nome: string) : string {
     return nome === null || nome === '' ? 'Nome do Lote' : nome;
+  }
+
+  public OnFileChange(event: any) : void {
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => this.imagemURL = e.target.result;
+
+    this.file = event.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImage();
+  }
+
+  public uploadImage() : void {
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
+      () => {
+        this.carregarEvento();
+        this.toasteService.success('A imagem foi guardada com sucesso', 'Sucesso!');
+      },
+      (error) => {
+        this.toasteService.error('Erro ao guardar a imagem', 'Erro!');
+      }
+    ).add(() => this.spinner.hide());
   }
 }

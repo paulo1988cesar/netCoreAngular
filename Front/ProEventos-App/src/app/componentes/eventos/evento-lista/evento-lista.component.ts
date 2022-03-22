@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Evento } from '@app/models/Evento';
@@ -5,6 +6,7 @@ import { EventoService } from '../../../services/evento.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-evento-lista',
@@ -94,5 +96,9 @@ export class EventoListaComponent implements OnInit {
 
   decline(): void {
     this.modalRef?.hide();
+  }
+
+  public buscaImagem(imageUrl: string) : string {
+    return (imageUrl !== '' ? `${environment.apiUrl}resources/images/${imageUrl}` : 'assets/upload.png');;
   }
 }
